@@ -23,7 +23,7 @@ try {
     arr.push(k8s(val, "foo"));
   }
   const secrets = JSON.stringify(arr);
-  core.setOutput("array", secrets);
+  core.setOutput("array", arr);
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2);
   console.log(`The event payload: ${payload}`);
