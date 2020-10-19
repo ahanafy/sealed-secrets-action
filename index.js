@@ -11,11 +11,10 @@ try {
   const time = new Date().toTimeString();
   core.setOutput("time", time);
   // Test
-  // let arr = [];
-  // for (let val of sealed()) {
-  //   arr.push(k8s(val, "foo"));
-  // }
-  const arr = "test";
+  let arr = [];
+  for (let val of sealed()) {
+    arr.push(k8s(val, "foo"));
+  }
   core.setOutput("array", arr);
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2);
