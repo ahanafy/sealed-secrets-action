@@ -15,7 +15,7 @@ try {
   for (let val of sealed()) {
     arr.push(k8s(val, "foo"));
   }
-  const secrets = JSON.stringify(arr);
+  const secrets = JSON.stringify(arr, undefined, 2);
   console.log(`The manifests: ${secrets}`);
   core.setOutput("array", secrets.toString());
   // Get the JSON webhook payload for the event that triggered the workflow
