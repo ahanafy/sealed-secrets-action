@@ -8,18 +8,53 @@ module.exports =
 const core = __webpack_require__(745);
 const github = __webpack_require__(717);
 
+const sealed = __webpack_require__(604);
+const k8s = __webpack_require__(329);
+
 try {
   // `who-to-greet` input defined in action metadata file
   const nameToGreet = core.getInput("who-to-greet");
   console.log(`Hello ${nameToGreet}!`);
   const time = new Date().toTimeString();
   core.setOutput("time", time);
+  // Test
+  // let arr = [];
+  // for (let val of sealed()) {
+  //   arr.push(k8s(val, "foo"));
+  // }
+  const arr = "test";
+  core.setOutput("array", arr);
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2);
   console.log(`The event payload: ${payload}`);
 } catch (error) {
   core.setFailed(error.message);
 }
+
+
+/***/ }),
+
+/***/ 329:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = function createK8sSecret(name, data) {
+  const { execSync } = __webpack_require__(129);
+
+  function run(cwd, command) {
+    return execSync(command, { cwd, encoding: "utf8" });
+  }
+
+  function createSecret(cwd) {
+    return run(
+      cwd,
+      "kubectl create secret generic " + name + " --from-literal=key1=supersecret --dry-run=client -ojson"
+    );
+  }
+
+  var secret = createSecret();
+
+  return secret;
+};
 
 
 /***/ }),
@@ -5812,6 +5847,32 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 604:
+/***/ ((module) => {
+
+module.exports = function getSealedSecrets() {
+  const SECRETS_CONTEXT =
+    process.env.SECRETS_CONTEXT ||
+    '{"GITHUB_TOKEN": "***","SECRET3": "***","SEALED_FOO": "***","SEALED_BAR": "***","SECRET2": "***","SECRET1": "***"}';
+
+  let jobj = JSON.parse(SECRETS_CONTEXT);
+
+  // Object.filter = (obj, predicate) =>
+  //   Object.fromEntries(Object.entries(obj).filter(predicate));
+
+  // let filtered = Object.filter(JSON.parse(SECRETS_CONTEXT), ([name, value]) =>
+  //   name.startsWith("SEALED")
+  // );
+
+
+ let filtered = Object.keys(jobj).filter((value) => value.startsWith("SEALED"))
+
+  return filtered;
+};
+
+
+/***/ }),
+
 /***/ 465:
 /***/ ((module) => {
 
@@ -5825,6 +5886,14 @@ module.exports = eval("require")("encoding");
 
 "use strict";
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ 129:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
 
 /***/ }),
 
