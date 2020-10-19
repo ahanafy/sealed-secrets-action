@@ -18,7 +18,7 @@ jobs:
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"
       - name: Get new output
-        run: echo "${{ steps.hello.outputs.array }} | jq ."
+        run: echo ${{ steps.hello.outputs.array }} | jq .
       - name: view the secrets context
         shell: bash
         run: echo "$SECRETS_CONTEXT"
