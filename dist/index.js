@@ -24,7 +24,6 @@ try {
   }
   let secrets = JSON.stringify(arr);
   secrets = secrets.replace(/\\n/g, "");
-  console.log(`The manifests: ${secrets}`);
   core.setOutput("array", secrets);
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2);
