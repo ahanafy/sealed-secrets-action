@@ -1,5 +1,8 @@
 name: actionstest
-on: push
+on:
+  push:
+    tags:
+      - "*"
 
 jobs:
   hello_world_job:
